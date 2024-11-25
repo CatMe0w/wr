@@ -29,6 +29,8 @@ data Function = Function
 -- todo: add more instructions
 data Instruction
   = LocalGet Word8
+  | LocalSet Word8
+  | I32Const Word32
   | End
   deriving (Show, Eq)
 

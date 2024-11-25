@@ -16,6 +16,8 @@ instructionParser = do
   case opcode of
     0x20 -> do
       LocalGet <$> anyWord8
+    0x41 -> do
+      I32Const . fromIntegral <$> anyWord8 -- todo: parse LEB128
     0x0B -> return End
     _ -> fail "Unknown instruction"
 
