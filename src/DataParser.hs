@@ -9,6 +9,7 @@ dataParser =
   Data
     <$> anyWord8
     <*> many' instructionParser
+    <* anyWord8
     <*> takeByteString
 
 dataSectionParser :: Parser [Data]
