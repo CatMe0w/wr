@@ -312,9 +312,7 @@ main = hspec $ do
                     Function {locals = [], code = [LocalGet 1, LocalGet 0, End]},
                     Function {locals = [], code = [End]}
                   ],
-                memorySection =
-                  [ Memory {initial = 0, max = Nothing}
-                  ],
+                memorySection = [Memory {initial = 0, max = Nothing}],
                 dataSection =
                   [ Data
                       { memoryIndex = 0,
