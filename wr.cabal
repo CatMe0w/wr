@@ -26,8 +26,12 @@ source-repository head
 library
   exposed-modules:
       CodeParser
+      DataParser
+      ExportParser
       FunctionParser
+      ImportParser
       MagicParser
+      MemoryParser
       ModuleParser
       SectionParser
       TypeParser

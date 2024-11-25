@@ -3,6 +3,10 @@ module Wasm
     FuncType (..),
     Function (..),
     Instruction (..),
+    Memory (..),
+    Data (..),
+    Export (..),
+    Import (..),
     SectionCode (..),
     Module (..),
   )
@@ -34,10 +38,41 @@ data Instruction
   | End
   deriving (Show, Eq)
 
+data Memory = Memory
+  { initial :: Word8,
+    max :: Maybe Word8
+  }
+  deriving (Show, Eq)
+
+data Data = Data
+  { memoryIndex :: Word8,
+    offset :: [Instruction],
+    dataContent :: ByteString
+  }
+  deriving (Show, Eq)
+
+data Export = Export
+  { name :: ByteString,
+    exportType :: Word8,
+    exportIndex :: Word8
+  }
+  deriving (Show, Eq)
+
+data Import = Import
+  { moduleName :: ByteString,
+    importName :: ByteString,
+    importType :: Word8
+  }
+  deriving (Show, Eq)
+
 data SectionCode
   = TypeSection
   | FunctionSection
   | CodeSection
+  | MemorySection
+  | DataSection
+  | ExportSection
+  | ImportSection
   | UnknownSection Word8
   deriving (Show, Eq)
 
@@ -46,6 +81,10 @@ data Module = Module
     version :: Word32,
     typeSection :: [FuncType],
     functionSection :: [Word32],
-    codeSection :: [Function]
+    codeSection :: [Function],
+    memorySection :: [Memory],
+    dataSection :: [Data],
+    exportSection :: [Export],
+    importSection :: [Import]
   }
   deriving (Show, Eq)

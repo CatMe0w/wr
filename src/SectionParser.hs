@@ -17,6 +17,10 @@ parseSectionCode = do
     0x01 -> return TypeSection
     0x03 -> return FunctionSection
     0x0A -> return CodeSection
+    0x05 -> return MemorySection
+    0x0B -> return DataSection
+    0x07 -> return ExportSection
+    0x02 -> return ImportSection
     _ -> return $ UnknownSection code
 
 -- todo: parse LEB128
