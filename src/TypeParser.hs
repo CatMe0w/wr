@@ -1,15 +1,15 @@
+{-# LANGUAGE LambdaCase #-}
+
 module TypeParser (valueTypeParser, funcTypeParser, typeSectionParser) where
 
 import Data.Attoparsec.ByteString
 import Wasm hiding (params, results)
 
 valueTypeParser :: Parser ValueType
-valueTypeParser = do
-  byte <- anyWord8
-  case byte of
-    0x7F -> return I32
-    0x7E -> return I64
-    _ -> fail "Unknown value type"
+valueTypeParser = anyWord8 >>= \case
+  0x7F -> pure I32
+  0x7E -> pure I64
+  _ -> fail "Unknown value type"
 
 funcTypeParser :: Parser FuncType
 funcTypeParser = do

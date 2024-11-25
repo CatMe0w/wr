@@ -5,10 +5,11 @@ import Wasm hiding (exportType, name)
 import Prelude hiding (take)
 
 exportParser :: Parser Export
-exportParser = do
-  nameLength <- anyWord8
-  name <- take $ fromIntegral nameLength
-  Export name <$> anyWord8 <*> anyWord8
+exportParser =
+  Export
+    <$> (take . fromIntegral =<< anyWord8)
+    <*> anyWord8
+    <*> anyWord8
 
 exportSectionParser :: Parser [Export]
 exportSectionParser = do

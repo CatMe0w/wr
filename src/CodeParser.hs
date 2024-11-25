@@ -14,11 +14,9 @@ instructionParser :: Parser Instruction
 instructionParser = do
   opcode <- anyWord8
   case opcode of
-    0x20 -> do
-      LocalGet <$> anyWord8
-    0x41 -> do
-      I32Const . fromIntegral <$> anyWord8 -- todo: parse LEB128
-    0x0B -> return End
+    0x20 -> LocalGet <$> anyWord8
+    0x41 -> I32Const . fromIntegral <$> anyWord8  -- todo: parse LEB128
+    0x0B -> pure End
     _ -> fail "Unknown instruction"
 
 functionBodyParser :: Parser Function
@@ -30,10 +28,12 @@ functionBodyParser = do
   return $ Function locals code
 
 localParser :: Parser (Int, ValueType)
-localParser = do
-  _count <- anyWord8
-  valueType <- valueTypeParser
-  return (fromIntegral _count, valueType)
+localParser =
+  ( (,)
+      . fromIntegral
+      <$> anyWord8
+  )
+    <*> valueTypeParser
 
 codeSectionParser :: Parser [Function]
 codeSectionParser = do
