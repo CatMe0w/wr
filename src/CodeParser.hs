@@ -6,6 +6,7 @@ module CodeParser
   )
 where
 
+import Control.Monad (replicateM)
 import Data.Attoparsec.ByteString
 import Data.Binary (Word8)
 import TypeParser (valueTypeParser)
@@ -35,7 +36,11 @@ instructionParser = do
     0x0B -> pure End
     0x0C -> Br . fromIntegral <$> anyWord8
     0x0D -> BrIf . fromIntegral <$> anyWord8
-    -- 0x0E -> BrTable <$> ?
+    0x0E -> do
+      count' <- fromIntegral <$> anyWord8
+      labels <- replicateM count' (fromIntegral <$> anyWord8)
+      defaultLabel <- fromIntegral <$> anyWord8
+      return $ BrTable labels defaultLabel
     0x0F -> pure Return
     0x10 -> Call . fromIntegral <$> anyWord8
     0x11 -> CallIndirect . fromIntegral <$> anyWord8
