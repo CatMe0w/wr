@@ -13,6 +13,4 @@ memoryParser =
     flagToMax flag max' = if flag == 0 then Nothing else max'
 
 memorySectionParser :: Parser [Memory]
-memorySectionParser = do
-  numMemories <- anyWord8
-  count (fromIntegral numMemories) memoryParser
+memorySectionParser = anyWord8 >>= flip count memoryParser . fromIntegral

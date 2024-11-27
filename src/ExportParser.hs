@@ -12,6 +12,4 @@ exportParser =
     <*> anyWord8
 
 exportSectionParser :: Parser [Export]
-exportSectionParser = do
-  numExports <- anyWord8
-  count (fromIntegral numExports) exportParser
+exportSectionParser = anyWord8 >>= flip count exportParser . fromIntegral

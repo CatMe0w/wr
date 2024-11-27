@@ -13,6 +13,4 @@ dataParser =
     <*> takeByteString
 
 dataSectionParser :: Parser [Data]
-dataSectionParser = do
-  numDataSegments <- anyWord8
-  count (fromIntegral numDataSegments) dataParser
+dataSectionParser = anyWord8 >>= flip count dataParser . fromIntegral

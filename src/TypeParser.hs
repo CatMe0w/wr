@@ -21,6 +21,4 @@ funcTypeParser = do
   return $ FuncType params results
 
 typeSectionParser :: Parser [FuncType]
-typeSectionParser = do
-  numTypes <- anyWord8
-  count (fromIntegral numTypes) funcTypeParser
+typeSectionParser = anyWord8 >>= flip count funcTypeParser . fromIntegral

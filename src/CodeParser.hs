@@ -36,6 +36,4 @@ localParser =
     <*> valueTypeParser
 
 codeSectionParser :: Parser [Function]
-codeSectionParser = do
-  numFunctions <- anyWord8
-  count (fromIntegral numFunctions) functionBodyParser
+codeSectionParser = anyWord8 >>= flip count functionBodyParser . fromIntegral

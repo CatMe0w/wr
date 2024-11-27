@@ -12,6 +12,4 @@ importParser =
     <*> anyWord8
 
 importSectionParser :: Parser [Import]
-importSectionParser = do
-  numImports <- anyWord8
-  count (fromIntegral numImports) importParser
+importSectionParser = anyWord8 >>= flip count importParser . fromIntegral
