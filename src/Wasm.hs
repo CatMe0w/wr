@@ -3,7 +3,6 @@ module Wasm
     FuncType (..),
     Function (..),
     BlockType (..),
-    MemArg (..),
     Instruction (..),
     Memory (..),
     Data (..),
@@ -37,12 +36,6 @@ data BlockType
   | ValueBlock ValueType
   deriving (Show, Eq)
 
-data MemArg = MemArg
-  { memArgOffset :: Word32,
-    memArgAlign :: Word32
-  }
-  deriving (Show, Eq)
-
 data Instruction
   = Unreachable
   | Nop
@@ -64,8 +57,8 @@ data Instruction
   | LocalTee Word32
   | GlobalGet Word32
   | GlobalSet Word32
-  | I32Load MemArg
-  | I64Load MemArg
+  | I32Load
+  | I64Load
   | F32Load
   | F64Load
   | I32Load8S

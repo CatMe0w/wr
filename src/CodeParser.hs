@@ -21,9 +21,6 @@ blockTypeParser w =
     0x7C -> ValueBlock F64
     _ -> error "Unknown block type"
 
-memArgParser :: Parser MemArg
-memArgParser = (MemArg . fromIntegral <$> anyWord8) <*> (fromIntegral <$> anyWord8)
-
 instructionParser :: Parser Instruction
 instructionParser = do
   -- todo: parse LEB128
@@ -49,8 +46,8 @@ instructionParser = do
     0x22 -> LocalTee . fromIntegral <$> anyWord8
     0x23 -> GlobalGet . fromIntegral <$> anyWord8
     0x24 -> GlobalSet . fromIntegral <$> anyWord8
-    0x28 -> I32Load <$> memArgParser
-    0x29 -> I64Load <$> memArgParser
+    0x28 -> pure I32Load
+    0x29 -> pure I64Load
     0x2A -> pure F32Load
     0x2B -> pure F64Load
     0x2C -> pure I32Load8S
