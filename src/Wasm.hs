@@ -2,6 +2,8 @@ module Wasm
   ( ValueType (..),
     FuncType (..),
     Function (..),
+    BlockType (..),
+    MemArg (..),
     Instruction (..),
     Memory (..),
     Data (..),

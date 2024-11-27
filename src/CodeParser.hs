@@ -7,8 +7,19 @@ module CodeParser
 where
 
 import Data.Attoparsec.ByteString
+import Data.Binary (Word8)
 import TypeParser (valueTypeParser)
 import Wasm hiding (code, locals)
+
+blockTypeParser :: Word8 -> BlockType
+blockTypeParser w =
+  case w of
+    0x40 -> EmptyBlock
+    0x7F -> ValueBlock I32
+    0x7E -> ValueBlock I64
+    0x7D -> ValueBlock F32
+    0x7C -> ValueBlock F64
+    _ -> error "Unknown block type"
 
 instructionParser :: Parser Instruction
 instructionParser = do
@@ -17,10 +28,10 @@ instructionParser = do
   case opcode of
     0x00 -> pure Unreachable
     0x01 -> pure Nop
-    -- 0x02 -> Block . blockTypeParser <$> anyWord8
-    -- 0x03 -> Loop . blockTypeParser <$> anyWord8
-    -- 0x04 -> If . blockTypeParser <$> anyWord8
-    -- 0x05 -> pure Else
+    0x02 -> Block . blockTypeParser <$> anyWord8
+    0x03 -> Loop . blockTypeParser <$> anyWord8
+    0x04 -> If . blockTypeParser <$> anyWord8
+    0x05 -> pure Else
     0x0B -> pure End
     0x0C -> Br . fromIntegral <$> anyWord8
     0x0D -> BrIf . fromIntegral <$> anyWord8
