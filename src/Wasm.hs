@@ -7,7 +7,7 @@ module Wasm
     Data (..),
     Export (..),
     Import (..),
-    SectionCode (..),
+    SectionType (..),
     Module (..),
   )
 where
@@ -65,7 +65,7 @@ data Import = Import
   }
   deriving (Show, Eq)
 
-data SectionCode
+data SectionType
   = TypeSection
   | FunctionSection
   | CodeSection

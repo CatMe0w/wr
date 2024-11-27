@@ -10,7 +10,7 @@ import Data.Binary (Word32)
 import Data.ByteString (ByteString)
 import Wasm hiding (code)
 
-parseSectionCode :: Parser SectionCode
+parseSectionCode :: Parser SectionType
 parseSectionCode = do
   code <- anyWord8
   case code of
@@ -28,7 +28,7 @@ parseSectionSize :: Parser Word32
 parseSectionSize = do
   fromIntegral <$> anyWord8
 
-parseSection :: Parser (SectionCode, ByteString)
+parseSection :: Parser (SectionType, ByteString)
 parseSection = do
   sectionCode <- parseSectionCode
   sectionSize <- parseSectionSize
