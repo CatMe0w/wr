@@ -1,6 +1,6 @@
 {-# LANGUAGE LambdaCase #-}
 
-module TypeParser (parseValueType, parseFuncType, parseTypeSection) where
+module TypeParser (parseValueType, parseTypeSection) where
 
 import Data.Attoparsec.ByteString
 import Wasm hiding (params, results)

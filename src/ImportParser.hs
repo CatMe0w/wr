@@ -1,4 +1,4 @@
-module ImportParser (parseImport, parseImportSection) where
+module ImportParser (parseImportSection) where
 
 import Data.Attoparsec.ByteString
 import Wasm hiding (name)

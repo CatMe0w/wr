@@ -1,4 +1,4 @@
-module ExportParser (parseExport, parseExportSection) where
+module ExportParser (parseExportSection) where
 
 import Data.Attoparsec.ByteString
 import Wasm hiding (exportType, name)

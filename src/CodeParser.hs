@@ -1,10 +1,4 @@
-module CodeParser
-  ( parseInstruction,
-    parseFunctionBody,
-    parseLocal,
-    parseCodeSection,
-  )
-where
+module CodeParser (parseInstruction, parseCodeSection) where
 
 import Control.Monad (replicateM)
 import Data.Attoparsec.Binary (anyWord32le, anyWord64le)

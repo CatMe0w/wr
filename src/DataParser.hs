@@ -1,4 +1,4 @@
-module DataParser (parseData, parseDataSection) where
+module DataParser (parseDataSection) where
 
 import CodeParser (parseInstruction)
 import Data.Attoparsec.ByteString

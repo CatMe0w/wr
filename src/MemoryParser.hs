@@ -1,4 +1,4 @@
-module MemoryParser (parseMemory, parseMemorySection) where
+module MemoryParser (parseMemorySection) where
 
 import Control.Applicative (optional)
 import Data.Attoparsec.ByteString

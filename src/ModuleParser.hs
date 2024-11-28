@@ -2,12 +2,12 @@ module ModuleParser (parseModule) where
 
 import CodeParser (parseCodeSection)
 import Data.Attoparsec.ByteString
-import DataParser (parseDataSection)
-import ExportParser (parseExportSection)
-import FunctionParser (parseFunctionSection)
-import ImportParser (parseImportSection)
+import DataParser
+import ExportParser
+import FunctionParser
+import ImportParser
 import MagicParser
-import MemoryParser (parseMemorySection)
+import MemoryParser
 import SectionParser
 import TypeParser
 import Wasm

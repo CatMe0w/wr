@@ -1,9 +1,4 @@
-module SectionParser
-  ( parseSectionType,
-    parseSectionSize,
-    parseSection,
-  )
-where
+module SectionParser (parseSection) where
 
 import Data.Attoparsec.ByteString
 import Data.Binary (Word32)
