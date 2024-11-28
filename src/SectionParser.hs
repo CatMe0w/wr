@@ -1,5 +1,5 @@
 module SectionParser
-  ( parseSectionCode,
+  ( parseSectionType,
     parseSectionSize,
     parseSection,
   )
@@ -10,8 +10,8 @@ import Data.Binary (Word32)
 import Data.ByteString (ByteString)
 import Wasm hiding (code)
 
-parseSectionCode :: Parser SectionType
-parseSectionCode = do
+parseSectionType :: Parser SectionType
+parseSectionType = do
   code <- anyWord8
   case code of
     0x01 -> return TypeSection
@@ -30,7 +30,7 @@ parseSectionSize = do
 
 parseSection :: Parser (SectionType, ByteString)
 parseSection = do
-  sectionCode <- parseSectionCode
+  sectionType <- parseSectionType
   sectionSize <- parseSectionSize
   sectionContent <- Data.Attoparsec.ByteString.take (fromIntegral sectionSize)
-  return (sectionCode, sectionContent)
+  return (sectionType, sectionContent)

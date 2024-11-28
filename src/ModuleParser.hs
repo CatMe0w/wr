@@ -25,8 +25,8 @@ parseSections modl = do
   if atEnd'
     then return modl
     else do
-      (sectionCode, sectionContent) <- parseSection
-      case sectionCode of
+      (sectionType, sectionContent) <- parseSection
+      case sectionType of
         TypeSection -> do
           typeSection' <- either fail return $ parseOnly typeSectionParser sectionContent
           parseSections modl {typeSection = typeSection'}
