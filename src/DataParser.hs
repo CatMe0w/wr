@@ -9,8 +9,11 @@ parseData :: Parser Data
 parseData =
   Data
     <$> parseU32
-    <*> many' parseInstruction
-    <* anyWord8 -- end marker
+    <*> ( (++)
+            <$> manyTill parseInstruction (word8 0x0B)
+            <*> pure [End]
+        )
+    <* parseU32
     <*> takeByteString
 
 parseDataSection :: Parser [Data]
