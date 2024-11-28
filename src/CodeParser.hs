@@ -7,16 +7,15 @@ module CodeParser
 where
 
 import Control.Monad (replicateM)
+import Data.Attoparsec.Binary (anyWord32le, anyWord64le)
 import Data.Attoparsec.ByteString
-import Data.Binary (Word8)
-import Data.Binary.IEEE754 (wordToFloat, wordToDouble)
+import Data.Binary.IEEE754 (wordToDouble, wordToFloat)
+import LEB128Parser
 import TypeParser (valueTypeParser)
 import Wasm hiding (code, locals)
-import Data.Attoparsec.Binary (anyWord32le, anyWord64le)
 
 instructionParser :: Parser Instruction
 instructionParser = do
-  -- todo: parse LEB128
   opcode <- anyWord8
   case opcode of
     0x00 -> pure Unreachable
@@ -26,23 +25,22 @@ instructionParser = do
     -- 0x04 -> If . blockTypeParser <$> anyWord8
     -- 0x05 -> pure Else
     0x0B -> pure End
-    0x0C -> Br . fromIntegral <$> anyWord8
-    0x0D -> BrIf . fromIntegral <$> anyWord8
+    0x0C -> Br <$> parseU32
+    0x0D -> BrIf <$> parseU32
     0x0E -> do
-      count' <- fromIntegral <$> anyWord8
-      labels <- replicateM count' (fromIntegral <$> anyWord8)
-      defaultLabel <- fromIntegral <$> anyWord8
-      return $ BrTable labels defaultLabel
+      count' <- fromIntegral <$> parseU32
+      labels <- replicateM count' parseU32
+      BrTable labels <$> parseU32
     0x0F -> pure Return
-    0x10 -> Call . fromIntegral <$> anyWord8
-    0x11 -> CallIndirect . fromIntegral <$> anyWord8
+    0x10 -> Call <$> parseU32
+    0x11 -> CallIndirect <$> parseU32
     0x1A -> pure Drop
     0x1B -> pure Select
     0x20 -> LocalGet . fromIntegral <$> anyWord8
     0x21 -> LocalSet . fromIntegral <$> anyWord8
-    0x22 -> LocalTee . fromIntegral <$> anyWord8
-    0x23 -> GlobalGet . fromIntegral <$> anyWord8
-    0x24 -> GlobalSet . fromIntegral <$> anyWord8
+    0x22 -> LocalTee <$> parseU32
+    0x23 -> GlobalGet <$> parseU32
+    0x24 -> GlobalSet <$> parseU32
     0x28 -> pure I32Load
     0x29 -> pure I64Load
     0x2A -> pure F32Load
@@ -68,8 +66,8 @@ instructionParser = do
     0x3E -> pure I64Store32
     0x3F -> pure MemorySize
     0x40 -> pure MemoryGrow
-    0x41 -> I32Const . fromIntegral <$> anyWord8
-    0x42 -> I64Const . fromIntegral <$> anyWord8
+    0x41 -> I32Const <$> parseI32
+    0x42 -> I64Const <$> parseI64
     0x43 -> F32Const . wordToFloat <$> anyWord32le
     0x44 -> F64Const . wordToDouble <$> anyWord64le
     0x45 -> pure I32Eqz

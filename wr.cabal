@@ -30,6 +30,7 @@ library
       ExportParser
       FunctionParser
       ImportParser
+      LEB128Parser
       MagicParser
       MemoryParser
       ModuleParser

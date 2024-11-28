@@ -13,8 +13,9 @@ module Wasm
   )
 where
 
-import Data.Binary (Word64, Word8)
+import Data.Binary (Word8)
 import Data.ByteString (ByteString)
+import Data.Int (Int32, Int64)
 import Data.Word (Word32)
 
 data ValueType = I32 | I64 | F32 | F64 deriving (Show, Eq)
@@ -82,8 +83,8 @@ data Instruction
   | I64Store32
   | MemorySize
   | MemoryGrow
-  | I32Const Word32
-  | I64Const Word64
+  | I32Const Int32
+  | I64Const Int64
   | F32Const Float
   | F64Const Double
   | I32Eqz
