@@ -36,8 +36,8 @@ instructionParser = do
     0x11 -> CallIndirect <$> parseU32
     0x1A -> pure Drop
     0x1B -> pure Select
-    0x20 -> LocalGet . fromIntegral <$> anyWord8
-    0x21 -> LocalSet . fromIntegral <$> anyWord8
+    0x20 -> LocalGet <$> parseU32
+    0x21 -> LocalSet <$> parseU32
     0x22 -> LocalTee <$> parseU32
     0x23 -> GlobalGet <$> parseU32
     0x24 -> GlobalSet <$> parseU32
