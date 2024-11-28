@@ -14,16 +14,23 @@ import LEB128Parser
 import TypeParser (valueTypeParser)
 import Wasm hiding (code, locals)
 
+blockTypeParser :: Parser BlockType
+blockTypeParser = do
+  bt <- anyWord8
+  case bt of
+    0x40 -> pure EmptyBlock
+    _ -> ValueBlock <$> valueTypeParser
+
 instructionParser :: Parser Instruction
 instructionParser = do
   opcode <- anyWord8
   case opcode of
     0x00 -> pure Unreachable
     0x01 -> pure Nop
-    -- 0x02 -> Block . blockTypeParser <$> anyWord8
-    -- 0x03 -> Loop . blockTypeParser <$> anyWord8
-    -- 0x04 -> If . blockTypeParser <$> anyWord8
-    -- 0x05 -> pure Else
+    0x02 -> Block <$> blockTypeParser
+    0x03 -> Loop <$> blockTypeParser
+    0x04 -> If <$> blockTypeParser
+    0x05 -> pure Else
     0x0B -> pure End
     0x0C -> Br <$> parseU32
     0x0D -> BrIf <$> parseU32
