@@ -1,15 +1,16 @@
 module ExportParser (parseExportSection) where
 
 import Data.Attoparsec.ByteString
+import LEB128Parser
 import Wasm hiding (exportType, name)
 import Prelude hiding (take)
 
 parseExport :: Parser Export
 parseExport =
   Export
-    <$> (take . fromIntegral =<< anyWord8)
+    <$> (take . fromIntegral =<< parseU32)
     <*> anyWord8
-    <*> anyWord8
+    <*> parseU32
 
 parseExportSection :: Parser [Export]
-parseExportSection = anyWord8 >>= flip count parseExport . fromIntegral
+parseExportSection = parseU32 >>= flip count parseExport . fromIntegral

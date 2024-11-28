@@ -208,7 +208,7 @@ parseLocal :: Parser (Int, ValueType)
 parseLocal =
   ( (,)
       . fromIntegral
-      <$> anyWord8
+      <$> parseU32
   )
     <*> parseValueType
 

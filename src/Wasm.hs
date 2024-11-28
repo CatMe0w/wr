@@ -213,13 +213,13 @@ data Instruction
   deriving (Show, Eq)
 
 data Memory = Memory
-  { initial :: Word8,
-    max :: Maybe Word8
+  { initial :: Word32,
+    max :: Maybe Word32
   }
   deriving (Show, Eq)
 
 data Data = Data
-  { memoryIndex :: Word8,
+  { memoryIndex :: Word32,
     offset :: [Instruction],
     dataContent :: ByteString
   }
@@ -228,7 +228,7 @@ data Data = Data
 data Export = Export
   { name :: ByteString,
     exportType :: Word8,
-    exportIndex :: Word8
+    exportIndex :: Word32
   }
   deriving (Show, Eq)
 

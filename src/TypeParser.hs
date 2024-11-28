@@ -3,6 +3,7 @@
 module TypeParser (parseValueType, parseTypeSection) where
 
 import Data.Attoparsec.ByteString
+import LEB128Parser
 import Wasm hiding (params, results)
 
 parseValueType :: Parser ValueType
@@ -17,11 +18,11 @@ parseValueType =
 parseFuncType :: Parser FuncType
 parseFuncType = do
   _ <- word8 0x60
-  numParams <- anyWord8
+  numParams <- parseU32
   params <- count (fromIntegral numParams) parseValueType
-  numResults <- anyWord8
+  numResults <- parseU32
   results <- count (fromIntegral numResults) parseValueType
   return $ FuncType params results
 
 parseTypeSection :: Parser [FuncType]
-parseTypeSection = anyWord8 >>= flip count parseFuncType . fromIntegral
+parseTypeSection = parseU32 >>= flip count parseFuncType . fromIntegral

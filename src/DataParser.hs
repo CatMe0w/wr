@@ -2,15 +2,16 @@ module DataParser (parseDataSection) where
 
 import CodeParser (parseInstruction)
 import Data.Attoparsec.ByteString
+import LEB128Parser
 import Wasm hiding (exportIndex, offset)
 
 parseData :: Parser Data
 parseData =
   Data
-    <$> anyWord8
+    <$> parseU32
     <*> many' parseInstruction
-    <* anyWord8
+    <* anyWord8 -- end marker
     <*> takeByteString
 
 parseDataSection :: Parser [Data]
-parseDataSection = anyWord8 >>= flip count parseData . fromIntegral
+parseDataSection = parseU32 >>= flip count parseData . fromIntegral
