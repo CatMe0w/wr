@@ -1,8 +1,8 @@
 module FunctionParser (functionSectionParser) where
 
 import Data.Attoparsec.ByteString
-import Data.Binary (Word8)
+import Data.Binary (Word32)
+import LEB128Parser
 
--- todo: parse LEB128
-functionSectionParser :: Parser [Word8]
-functionSectionParser = anyWord8 >>= flip count anyWord8 . fromIntegral
+functionSectionParser :: Parser [Word32]
+functionSectionParser = anyWord8 >>= flip count parseU32 . fromIntegral

@@ -8,6 +8,7 @@ where
 import Data.Attoparsec.ByteString
 import Data.Binary (Word32)
 import Data.ByteString (ByteString)
+import LEB128Parser (parseU32)
 import Wasm hiding (code)
 
 parseSectionType :: Parser SectionType
@@ -23,10 +24,8 @@ parseSectionType = do
     0x02 -> return ImportSection
     _ -> return $ UnknownSection code
 
--- todo: parse LEB128
 parseSectionSize :: Parser Word32
-parseSectionSize = do
-  fromIntegral <$> anyWord8
+parseSectionSize = parseU32
 
 parseSection :: Parser (SectionType, ByteString)
 parseSection = do
