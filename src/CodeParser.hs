@@ -198,8 +198,8 @@ parseInstruction = do
 
 parseFunctionBody :: Parser Function
 parseFunctionBody = do
-  _ <- anyWord8 -- body size
-  numLocals <- anyWord8
+  _ <- parseU32 -- body size
+  numLocals <- parseU32
   locals <- count (fromIntegral numLocals) parseLocal
   code <- many' parseInstruction
   return $ Function locals code

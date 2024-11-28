@@ -1,6 +1,6 @@
 module ModuleParser (parseModule) where
 
-import CodeParser (parseCodeSection)
+import CodeParser
 import Data.Attoparsec.ByteString
 import DataParser
 import ExportParser
