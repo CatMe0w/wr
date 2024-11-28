@@ -26,6 +26,7 @@ dependencies:
 - attoparsec
 - attoparsec-binary
 - hspec
+- data-binary-ieee754
 
 ghc-options:
 - -Wall

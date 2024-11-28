@@ -9,8 +9,10 @@ where
 import Control.Monad (replicateM)
 import Data.Attoparsec.ByteString
 import Data.Binary (Word8)
+import Data.Binary.IEEE754 (wordToFloat, wordToDouble)
 import TypeParser (valueTypeParser)
 import Wasm hiding (code, locals)
+import Data.Attoparsec.Binary (anyWord32le, anyWord64le)
 
 blockTypeParser :: Word8 -> BlockType
 blockTypeParser w =
@@ -78,8 +80,8 @@ instructionParser = do
     0x40 -> pure MemoryGrow
     0x41 -> I32Const . fromIntegral <$> anyWord8
     0x42 -> I64Const . fromIntegral <$> anyWord8
-    -- 0x43 -> F32Const . fromIntegral <$> anyWord8
-    -- 0x44 -> F64Const . fromIntegral <$> anyWord8
+    0x43 -> F32Const . wordToFloat <$> anyWord32le
+    0x44 -> F64Const . wordToDouble <$> anyWord64le
     0x45 -> pure I32Eqz
     0x46 -> pure I32Eq
     0x47 -> pure I32Ne
