@@ -9,6 +9,8 @@ valueTypeParser :: Parser ValueType
 valueTypeParser = anyWord8 >>= \case
   0x7F -> pure I32
   0x7E -> pure I64
+  0x7D -> pure F32
+  0x7C -> pure F64
   _ -> fail "Unknown value type"
 
 funcTypeParser :: Parser FuncType
