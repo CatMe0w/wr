@@ -1,21 +1,21 @@
-module ModuleParser (moduleParser) where
+module ModuleParser (parseModule) where
 
-import CodeParser (codeSectionParser)
+import CodeParser (parseCodeSection)
 import Data.Attoparsec.ByteString
-import DataParser (dataSectionParser)
-import ExportParser (exportSectionParser)
-import FunctionParser (functionSectionParser)
-import ImportParser (importSectionParser)
+import DataParser (parseDataSection)
+import ExportParser (parseExportSection)
+import FunctionParser (parseFunctionSection)
+import ImportParser (parseImportSection)
 import MagicParser
-import MemoryParser (memorySectionParser)
+import MemoryParser (parseMemorySection)
 import SectionParser
 import TypeParser
 import Wasm
 
-moduleParser :: Parser Module
-moduleParser = do
-  magic' <- magicParser
-  version' <- versionParser
+parseModule :: Parser Module
+parseModule = do
+  magic' <- parseMagic
+  version' <- parseVersion
   let emptyModule = Module magic' version' [] [] [] [] [] [] []
   parseSections emptyModule
 
@@ -28,24 +28,24 @@ parseSections modl = do
       (sectionType, sectionContent) <- parseSection
       case sectionType of
         TypeSection -> do
-          typeSection' <- either fail return $ parseOnly typeSectionParser sectionContent
+          typeSection' <- either fail return $ parseOnly parseTypeSection sectionContent
           parseSections modl {typeSection = typeSection'}
         FunctionSection -> do
-          functionSection' <- either fail return $ parseOnly functionSectionParser sectionContent
-          parseSections modl {functionSection = map fromIntegral functionSection'}
+          functionSection' <- either fail return $ parseOnly parseFunctionSection sectionContent
+          parseSections modl {functionSection = functionSection'}
         CodeSection -> do
-          codeSection' <- either fail return $ parseOnly codeSectionParser sectionContent
+          codeSection' <- either fail return $ parseOnly parseCodeSection sectionContent
           parseSections modl {codeSection = codeSection'}
         MemorySection -> do
-          memorySection' <- either fail return $ parseOnly memorySectionParser sectionContent
+          memorySection' <- either fail return $ parseOnly parseMemorySection sectionContent
           parseSections modl {memorySection = memorySection'}
         DataSection -> do
-          dataSection' <- either fail return $ parseOnly dataSectionParser sectionContent
+          dataSection' <- either fail return $ parseOnly parseDataSection sectionContent
           parseSections modl {dataSection = dataSection'}
         ExportSection -> do
-          exportSection' <- either fail return $ parseOnly exportSectionParser sectionContent
+          exportSection' <- either fail return $ parseOnly parseExportSection sectionContent
           parseSections modl {exportSection = exportSection'}
         ImportSection -> do
-          importSection' <- either fail return $ parseOnly importSectionParser sectionContent
+          importSection' <- either fail return $ parseOnly parseImportSection sectionContent
           parseSections modl {importSection = importSection'}
         _ -> parseSections modl

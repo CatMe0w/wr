@@ -2,7 +2,7 @@ module Main (main) where
 
 import Data.Attoparsec.ByteString (parseOnly)
 import qualified Data.ByteString as BS
-import ModuleParser (moduleParser)
+import ModuleParser (parseModule)
 import Test.Hspec
 import Wasm
 import Prelude hiding (max)
@@ -10,7 +10,7 @@ import Prelude hiding (max)
 -- main :: IO ()
 -- main = do
 --   wasm <- BS.readFile "test.wasm"
---   let result = parseOnly moduleParser wasm
+--   let result = parseOnly parseModule wasm
 --   case result of
 --     Left err -> putStrLn $ "Parse error: " ++ err
 --     Right modl -> print modl
@@ -57,7 +57,7 @@ main = hspec $ do
                 exportSection = [],
                 importSection = []
               }
-      let result = parseOnly moduleParser wasm
+      let result = parseOnly parseModule wasm
       case result of
         Left err -> expectationFailure $ "Parse error: " ++ err
         Right modl -> modl `shouldBe` expected
@@ -130,7 +130,7 @@ main = hspec $ do
                 exportSection = [],
                 importSection = []
               }
-      let result = parseOnly moduleParser wasm
+      let result = parseOnly parseModule wasm
       case result of
         Left err -> expectationFailure $ "Parse error: " ++ err
         Right modl -> modl `shouldBe` expected
@@ -334,7 +334,7 @@ main = hspec $ do
                       }
                   ]
               }
-      let result = parseOnly moduleParser wasm
+      let result = parseOnly parseModule wasm
       case result of
         Left err -> expectationFailure $ "Parse error: " ++ err
         Right modl -> modl `shouldBe` expected

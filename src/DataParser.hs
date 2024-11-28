@@ -1,16 +1,16 @@
-module DataParser (dataParser, dataSectionParser) where
+module DataParser (parseData, parseDataSection) where
 
-import CodeParser (instructionParser)
+import CodeParser (parseInstruction)
 import Data.Attoparsec.ByteString
 import Wasm hiding (exportIndex, offset)
 
-dataParser :: Parser Data
-dataParser =
+parseData :: Parser Data
+parseData =
   Data
     <$> anyWord8
-    <*> many' instructionParser
+    <*> many' parseInstruction
     <* anyWord8
     <*> takeByteString
 
-dataSectionParser :: Parser [Data]
-dataSectionParser = anyWord8 >>= flip count dataParser . fromIntegral
+parseDataSection :: Parser [Data]
+parseDataSection = anyWord8 >>= flip count parseData . fromIntegral

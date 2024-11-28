@@ -1,15 +1,15 @@
-module ExportParser (exportParser, exportSectionParser) where
+module ExportParser (parseExport, parseExportSection) where
 
 import Data.Attoparsec.ByteString
 import Wasm hiding (exportType, name)
 import Prelude hiding (take)
 
-exportParser :: Parser Export
-exportParser =
+parseExport :: Parser Export
+parseExport =
   Export
     <$> (take . fromIntegral =<< anyWord8)
     <*> anyWord8
     <*> anyWord8
 
-exportSectionParser :: Parser [Export]
-exportSectionParser = anyWord8 >>= flip count exportParser . fromIntegral
+parseExportSection :: Parser [Export]
+parseExportSection = anyWord8 >>= flip count parseExport . fromIntegral

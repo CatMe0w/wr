@@ -1,15 +1,15 @@
-module ImportParser (importParser, importSectionParser) where
+module ImportParser (parseImport, parseImportSection) where
 
 import Data.Attoparsec.ByteString
 import Wasm hiding (name)
 import Prelude hiding (take)
 
-importParser :: Parser Import
-importParser = 
+parseImport :: Parser Import
+parseImport =
   Import
     <$> (take . fromIntegral =<< anyWord8)
     <*> (take . fromIntegral =<< anyWord8)
     <*> anyWord8
 
-importSectionParser :: Parser [Import]
-importSectionParser = anyWord8 >>= flip count importParser . fromIntegral
+parseImportSection :: Parser [Import]
+parseImportSection = anyWord8 >>= flip count parseImport . fromIntegral

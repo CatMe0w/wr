@@ -1,14 +1,14 @@
 {-# LANGUAGE OverloadedStrings #-}
 
-module MagicParser (magicParser, versionParser) where
+module MagicParser (parseMagic, parseVersion) where
 
 import qualified Data.Attoparsec.Binary as Bin
 import Data.Attoparsec.ByteString
 import Data.ByteString (ByteString)
 import Data.Word (Word32)
 
-magicParser :: Parser ByteString
-magicParser = string "\0asm"
+parseMagic :: Parser ByteString
+parseMagic = string "\0asm"
 
-versionParser :: Parser Word32
-versionParser = Bin.anyWord32le
+parseVersion :: Parser Word32
+parseVersion = Bin.anyWord32le

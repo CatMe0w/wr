@@ -1,8 +1,8 @@
 module CodeParser
-  ( instructionParser,
-    functionBodyParser,
-    localParser,
-    codeSectionParser,
+  ( parseInstruction,
+    parseFunctionBody,
+    parseLocal,
+    parseCodeSection,
   )
 where
 
@@ -11,25 +11,25 @@ import Data.Attoparsec.Binary (anyWord32le, anyWord64le)
 import Data.Attoparsec.ByteString
 import Data.Binary.IEEE754 (wordToDouble, wordToFloat)
 import LEB128Parser
-import TypeParser (valueTypeParser)
+import TypeParser (parseValueType)
 import Wasm hiding (code, locals)
 
-blockTypeParser :: Parser BlockType
-blockTypeParser = do
+parseBlockType :: Parser BlockType
+parseBlockType = do
   bt <- anyWord8
   case bt of
     0x40 -> pure EmptyBlock
-    _ -> ValueBlock <$> valueTypeParser
+    _ -> ValueBlock <$> parseValueType
 
-instructionParser :: Parser Instruction
-instructionParser = do
+parseInstruction :: Parser Instruction
+parseInstruction = do
   opcode <- anyWord8
   case opcode of
     0x00 -> pure Unreachable
     0x01 -> pure Nop
-    0x02 -> Block <$> blockTypeParser
-    0x03 -> Loop <$> blockTypeParser
-    0x04 -> If <$> blockTypeParser
+    0x02 -> Block <$> parseBlockType
+    0x03 -> Loop <$> parseBlockType
+    0x04 -> If <$> parseBlockType
     0x05 -> pure Else
     0x0B -> pure End
     0x0C -> Br <$> parseU32
@@ -202,21 +202,21 @@ instructionParser = do
     0xBF -> pure F64ReinterpretI64
     _ -> fail "Unknown instruction"
 
-functionBodyParser :: Parser Function
-functionBodyParser = do
+parseFunctionBody :: Parser Function
+parseFunctionBody = do
   _ <- anyWord8 -- body size
   numLocals <- anyWord8
-  locals <- count (fromIntegral numLocals) localParser
-  code <- many' instructionParser
+  locals <- count (fromIntegral numLocals) parseLocal
+  code <- many' parseInstruction
   return $ Function locals code
 
-localParser :: Parser (Int, ValueType)
-localParser =
+parseLocal :: Parser (Int, ValueType)
+parseLocal =
   ( (,)
       . fromIntegral
       <$> anyWord8
   )
-    <*> valueTypeParser
+    <*> parseValueType
 
-codeSectionParser :: Parser [Function]
-codeSectionParser = anyWord8 >>= flip count functionBodyParser . fromIntegral
+parseCodeSection :: Parser [Function]
+parseCodeSection = anyWord8 >>= flip count parseFunctionBody . fromIntegral
