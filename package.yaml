@@ -7,7 +7,7 @@ maintainer:          "CatMe0w@live.cn"
 copyright:           "2024 CatMe0w"
 
 extra-source-files:
-- README
+- README.md
 - CHANGELOG.md
 
 # Metadata used when publishing your package
